@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>refs</title>
+    <!-- 引入React对象 -->
+  <script src="./source_code/react.development.js"></script>
+  <!-- 引入ReactDOM对象 -->
+  <script src="./source_code/react-dom.development.js"></script>
+  <!-- 引入babel, 转换JSX -->
+  <script src="./source_code/babel.min.js"></script>
+  
+</head>
+<body>
+  <div id="myApp"></div>
+  <script type="text/babel">
+    /*
+    * 
+    * 回调refs的形式如下所示
+    * 回调refs会在初始化时候执行一次, 并且后面的每次更新都会执行两次;(state改变会触发更新和render再执行)
+    * 通过将ref的回调函数定义成class的绑定函数的方式可以避免重复调用的问题;
+    * 除此之外, string形式的refs不要用, 有其他问题, 详见文档;
+    * 除此之外, 还有creatRef形式, 其实跟class绑定函数方式一样, 注意每一个ref都要新增一个creatRef. (推荐用这种方法)
+    * 不要过度使用ref, 请在以下情况尽量避免使用: 正在操作的对象(event.target)
+    */
+    class Demo extends React.Component{
+      state = {isHot:true}
+      showData = ()=>{
+        const {value} = this.inputElement;
+        alert(value);
+      }
+      changeState = ()=>{
+        const {isHot} = this.state;
+        debugger
+        this.setState({isHot:true})
+        debugger
+        console.log(this.state.isHot);
+      }
+      classWayRef = (currentElement)=>{
+        //class的绑定函数的方式
+      }
+      render(){
+        return (
+          <div>
+            <h2>isHot: {JSON.stringify(this.state.isHot)}</h2>
+            <input ref={(currentElement)=>{this.inputElement=currentElement;console.log("执行了一次refs",currentElement);}} type="text" placeholder="点击右侧按钮弹窗显示输入的值"/>
+            <br/>
+            <br/>
+            <button onClick={this.showData}>点击弹出value</button>
+            <br/>
+            <br/>
+            <button onClick={this.changeState}>点击更改state</button>
+            <br/>
+            <div ref={this.classWayRef}></div>
+          </div>
+        )
+      }
+    }
+    ReactDOM.render(<Demo/>, document.getElementById("myApp"));
+  </script>
+</body>
+</html>

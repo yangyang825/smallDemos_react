@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Life Circle in React</title>
+  </head>
+  <body>
+    <!-- We will put our React component inside this div. -->
+    <div id="component-goes-here"></div>
+
+    <!-- Load React. -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Load Babel for JSX -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    
+    <!-- Load your React component. -->
+    <!-- <script src="like_button.jsx"></script> -->
+
+    <script type="text/babel">
+      class Life extends React.Component{
+        state = {opacity:1}
+        death = ()=>{
+          //卸载组件
+          console.log("death");
+          ReactDOM.unmountComponentAtNode(document.getElementById("component-goes-here"));
+        }
+        //componentDidMount: 组件挂载完毕之后调用(即只调用一次)
+        componentDidMount(){
+          console.log("componentDidMount");
+          this.timer=setInterval(()=>{
+            let {opacity} = this.state;
+            opacity-=0.1;
+            if(opacity<=0){
+              opacity  = 1;
+            }
+            this.setState({opacity});
+          }, 200);
+        }
+        //componentWillUnmount: 组件即将被卸载
+        componentWillUnmount(){
+          clearInterval(this.timer);
+        }
+        //render调用: 初始化渲染, state更新之后
+        render(){
+          console.log("render");
+          return(
+            <div>
+              <h2 style={{opacity:this.state.opacity}}>
+                React学不会怎么办?
+              </h2>
+              <button onClick={this.death}>
+                不活了
+              </button>
+            </div>
+          )
+        }
+      }
+      ReactDOM.render(<Life/>, document.getElementById("component-goes-here"));
+    </script>
+  </body>
+</html>
